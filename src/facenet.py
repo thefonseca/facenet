@@ -314,7 +314,7 @@ class ImageClass():
     def __len__(self):
         return len(self.image_paths)
   
-def get_dataset(path, has_class_directories=True):
+def get_dataset(path, has_class_directories=True, max_per_class=None):
     dataset = []
     path_exp = os.path.expanduser(path)
     classes = [path for path in os.listdir(path_exp) \
@@ -325,6 +325,8 @@ def get_dataset(path, has_class_directories=True):
         class_name = classes[i]
         facedir = os.path.join(path_exp, class_name)
         image_paths = get_image_paths(facedir)
+        if max_per_class and len(image_paths) > max_per_class:
+            image_paths = random.sample(image_paths, max_per_class)
         dataset.append(ImageClass(class_name, image_paths))
   
     return dataset
